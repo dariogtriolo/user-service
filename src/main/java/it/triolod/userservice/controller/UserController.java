@@ -47,7 +47,7 @@ class UserController {
 	}
 
 	@PostMapping("/users")
-	ResponseEntity<User> newEmployee(@Valid @RequestBody User user) {
+	ResponseEntity<User> newUser(@Valid @RequestBody User user) {
 
 		User result = repository.save(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
