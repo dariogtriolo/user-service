@@ -1,4 +1,4 @@
-package it.triolod.userservice.service.controller.exception;
+package it.triolod.userservice.controller.exception;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

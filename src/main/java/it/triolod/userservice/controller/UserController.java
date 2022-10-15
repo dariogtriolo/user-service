@@ -1,4 +1,4 @@
-package it.triolod.userservice.service.controller;
+package it.triolod.userservice.controller;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
+import it.triolod.userservice.controller.exception.UserNotFoundException;
 import it.triolod.userservice.model.User;
 import it.triolod.userservice.repository.UserRepository;
-import it.triolod.userservice.service.controller.exception.UserNotFoundException;
 
 @RestController
 class UserController {
@@ -43,9 +45,10 @@ class UserController {
 	}
 
 	@PostMapping("/users")
-	User newEmployee(@RequestBody User user) {
+	ResponseEntity<User> newEmployee(@RequestBody User user) {
 
-		return repository.save(user);
+		User result = repository.save(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}
 
 	@GetMapping("/users/{id}")

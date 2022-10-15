@@ -30,8 +30,13 @@ public class User {
 	public User() {
 	}
 
-	public User(String name) {
+	public User(Long id, String name, String surname, String email, String address) {
+		super();
+		this.id = id;
 		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.address = address;
 	}
 
 	public Long getId() {

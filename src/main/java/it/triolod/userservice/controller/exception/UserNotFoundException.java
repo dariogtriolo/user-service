@@ -1,4 +1,4 @@
-package it.triolod.userservice.service.controller.exception;
+package it.triolod.userservice.controller.exception;
 
 public class UserNotFoundException extends RuntimeException {
 
