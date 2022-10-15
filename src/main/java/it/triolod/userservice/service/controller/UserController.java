@@ -100,7 +100,7 @@ class UserController {
 				List<User> users = csvToBean.parse();
 
 				if (users != null && !users.isEmpty()) {
-					users.forEach(user -> repository.save(user));
+					users.forEach(repository::save);
 				}
 
 			} catch (Exception e) {
