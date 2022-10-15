@@ -5,7 +5,6 @@ The following was discovered as part of building this project:
 
 # Getting Started
 
-docker run --name postgres-db -e POSTGRES_PASSWORD=docker -p 5433:5432 -d postgres
 
 ### Reference Documentation
 For further reference, please consider the following sections:
@@ -16,11 +15,11 @@ For further reference, please consider the following sections:
 * [Spring Web](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#web)
 * [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#data.sql.jpa-and-spring-data)
 
-### Guides
-The following guides illustrate how to use some features concretely:
+### Run the application
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+* ./mvnw package
+* docker pull postgres
+* docker run --name postgres-db -e POSTGRES_PASSWORD=docker -p 5433:5432 -d postgres && docker run -p 8080:8080 user-service-docker
+* docker build -t user-service-docker .
+* docker run -p 8080:8080 user-service-docker
 
