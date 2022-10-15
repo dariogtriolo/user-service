@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.triolod.userservice.model.User;
@@ -20,16 +21,19 @@ class UserController {
 	private final UserRepository repository;
 
 	UserController(UserRepository repository) {
+		
 		this.repository = repository;
 	}
 
 	@GetMapping("/users")
 	List<User> getAll() {
+		
 		return repository.findAll();
 	}
 
 	@PostMapping("/users")
 	User newEmployee(@RequestBody User user) {
+		
 		return repository.save(user);
 	}
 
@@ -41,6 +45,7 @@ class UserController {
 
 	@PutMapping("/users/{id}")
 	User updateUser(@RequestBody User newUser, @PathVariable Long id) {
+		
 		return repository.findById(id).map(user -> {
 			user.setEmail(newUser.getName());
 			user.setAddress(newUser.getAddress());
@@ -53,6 +58,19 @@ class UserController {
 
 	@DeleteMapping("/users/{id}")
 	void deleteUser(@PathVariable Long id) {
+		
 		repository.deleteById(id);
+	}
+
+	@GetMapping("/users/search")
+	List<User> search(@RequestParam(name = "name", required = false) String name,
+			@RequestParam(name = "surname", required = false) String surname) {
+		
+		if (name != null && !name.equalsIgnoreCase("") && surname != null && !surname.equalsIgnoreCase("")) {
+			
+			return repository.findByNameAndSurname(name, surname);
+		}
+		
+		return repository.findByNameOrSurname(name, surname);
 	}
 }
