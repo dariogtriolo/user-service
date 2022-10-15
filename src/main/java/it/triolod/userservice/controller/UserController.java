@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -45,7 +47,7 @@ class UserController {
 	}
 
 	@PostMapping("/users")
-	ResponseEntity<User> newEmployee(@RequestBody User user) {
+	ResponseEntity<User> newEmployee(@Valid @RequestBody User user) {
 
 		User result = repository.save(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);

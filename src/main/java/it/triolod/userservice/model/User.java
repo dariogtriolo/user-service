@@ -2,26 +2,38 @@ package it.triolod.userservice.model;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import com.opencsv.bean.CsvBindByName;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "USERS", 
+uniqueConstraints = @UniqueConstraint(columnNames={"name", "surname"}, name="users_unique_constraint"))
 public class User {
 
-	private @Id @GeneratedValue Long id;
+	@Id 
+	@GeneratedValue
+	private Long id;
 
 	@CsvBindByName
+	@Column(nullable = false)
+	@NotBlank(message="Name cannot be blank")
 	private String name;
 
 	@CsvBindByName
+	@Column(nullable = false)
+	@NotBlank(message="Name cannot be blank")
 	private String surname;
 
 	@CsvBindByName
+	@Email(message="Invalid email address")
 	private String email;
 
 	@CsvBindByName
