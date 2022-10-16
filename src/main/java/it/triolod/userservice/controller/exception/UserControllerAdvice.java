@@ -34,4 +34,15 @@ class UserControllerAdvice {
 		});
 		return errors;
 	}
+
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(Exception.class)
+	public Map<String, String> handleExceptions(Exception ex) {
+		Map<String, String> errors = new HashMap<>();
+		String fieldName = "message";
+		String errorMessage = ex.getMessage();
+		errors.put(fieldName, errorMessage);
+		return errors;
+	}
 }

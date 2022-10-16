@@ -69,7 +69,7 @@ public class UserControllerTests {
 	void createUser() throws Exception {
 		int databaseSizeBeforeCreate = userRepository.findAll().size();
 
-		mockMvc.perform(MockMvcRequestBuilders.post(ENTITY_API_URL).content(asJsonString(createEntity()))
+		mockMvc.perform(MockMvcRequestBuilders.post("/api" + ENTITY_API_URL).content(asJsonString(createEntity()))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isCreated())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());

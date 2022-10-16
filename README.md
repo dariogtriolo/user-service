@@ -17,7 +17,8 @@ For further reference, please consider the following sections:
 
 ### Run the application
 
-* ./mvnw package
+From the root folder of the project
+* ./mvnw clean package
 * docker pull postgres
 * docker run --name postgres-db -e POSTGRES_PASSWORD=docker -p 5433:5432 -d postgres && docker run -p 8080:8080 user-service-docker
 * docker build -t user-service-docker .

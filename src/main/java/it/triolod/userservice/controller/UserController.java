@@ -3,10 +3,12 @@ package it.triolod.userservice.controller;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +33,7 @@ import it.triolod.userservice.model.User;
 import it.triolod.userservice.repository.UserRepository;
 
 @RestController
+@RequestMapping(path = "/api")
 class UserController {
 
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -63,7 +68,9 @@ class UserController {
 	User updateUser(@RequestBody User newUser, @PathVariable Long id) {
 
 		return repository.findById(id).map(user -> {
-			user.setEmail(newUser.getName());
+			user.setName(newUser.getName());
+			user.setSurname(newUser.getSurname());
+			user.setEmail(newUser.getEmail());
 			user.setAddress(newUser.getAddress());
 			return repository.save(user);
 		}).orElseGet(() -> {
@@ -90,12 +97,13 @@ class UserController {
 		return repository.findByNameOrSurname(name, surname);
 	}
 
-	@PostMapping("/users/upload-csv")
-	void uploadCSVFile(@RequestParam("file") MultipartFile file) throws Exception {
+	@PostMapping(path = "/users/upload-csv")
+	ResponseEntity<List<User>> uploadCSVFile(@RequestPart("file") MultipartFile file) throws Exception {
+		List<User> createdUsers = new ArrayList<>();
 
 		if (file.isEmpty()) {
-
-			log.info("File is empty");
+			log.info("File is empty");			
+			//throw new UploadedFileIsEmptyException();
 		} else {
 			try {
 				Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
@@ -105,12 +113,14 @@ class UserController {
 				List<User> users = csvToBean.parse();
 
 				if (users != null && !users.isEmpty()) {
-					users.forEach(repository::save);
+					createdUsers = repository.saveAll(users);
 				}
 
-			} catch (Exception e) {
-				log.error("Error during csv reading", e.getMessage());
+			} catch (Exception e) {				
+				log.error("Error in paring csv", e.getMessage());
+				throw new Exception();
 			}
 		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdUsers);
 	}
 }
