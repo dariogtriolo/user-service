@@ -3,7 +3,6 @@ package it.triolod.userservice.controller;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
 
 import java.util.List;
 
