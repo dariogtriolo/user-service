@@ -3,6 +3,7 @@ package it.triolod.userservice.controller;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import java.util.List;
 
@@ -66,23 +67,39 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void createUser() throws Exception {
+	void shouldCreateUser() throws Exception {
 		int databaseSizeBeforeCreate = userRepository.findAll().size();
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/api" + ENTITY_API_URL).content(asJsonString(createEntity()))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isCreated())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.name").exists())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.surname").exists())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.address").exists())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.email").exists());
 
 		List<User> userList = userRepository.findAll();
 		assertThat(userList).hasSize(databaseSizeBeforeCreate + 1);
 
-        User testUser = userList.get(userList.size() - 1);
-        assertThat(testUser.getName()).isEqualTo(DEFAULT_NAME);        
-        assertThat(testUser.getSurname()).isEqualTo(DEFAULT_SURNAME);
-        assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
-        assertThat(testUser.getAddress()).isEqualTo(DEFAULT_ADDRESS);
+		User testUser = userList.get(userList.size() - 1);
+		assertThat(testUser.getName()).isEqualTo(DEFAULT_NAME);
+		assertThat(testUser.getSurname()).isEqualTo(DEFAULT_SURNAME);
+		assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
+		assertThat(testUser.getAddress()).isEqualTo(DEFAULT_ADDRESS);
 	}
+
+	@Test
+	void shouldReturnBadRequestWhenEmailFormatIsNotValid() throws Exception {
+
+		user = createEntity();
+		user.setEmail("not_valid_email");
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/api" + ENTITY_API_URL).content(asJsonString(user))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isBadRequest());
+	}
+	
 
 	public static String asJsonString(final Object obj) {
 		try {
