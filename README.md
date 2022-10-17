@@ -1,26 +1,24 @@
-# Read Me First
-The following was discovered as part of building this project:
+#### Run test
+mvn test
 
-* The original package name 'it.triolod.user-service' is invalid and this project uses 'it.triolod.userservice' instead.
+#### Run application 
+* docker pull postgres //get the latest postgres image
+* docker run --name postgres-db -e POSTGRES_PASSWORD=docker -p 5433:5432 -d postgres
+* mvn spring-boot:run
 
-# Getting Started
-
-
-### Reference Documentation
-For further reference, please consider the following sections:
-
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.7.4/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.7.4/maven-plugin/reference/html/#build-image)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#web)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#data.sql.jpa-and-spring-data)
-
-### Run the application
+#### Run application via docker
 
 From the root folder of the project
-* ./mvnw clean package
-* docker pull postgres
-* docker run --name postgres-db -e POSTGRES_PASSWORD=docker -p 5433:5432 -d postgres && docker run -p 8080:8080 user-service-docker
-* docker build -t user-service-docker .
-* docker run -p 8080:8080 user-service-docker
+* ./mvnw clean package -DskipTests
+* cp target/user-service-0.0.1-SNAPSHOT.jar docker/
+* docker-compose -f docker/docker-compose.yml up
 
+#### Api documentation
+http://localhost:8080/swagger-ui/index.html
+
+#### TODO
+* separate business logic by restcontroller (service + dto)
+* improve csv api validation (wrong fields, wrong fields type, etc...)
+* add more test to cover all rest controllers
+
+ 
